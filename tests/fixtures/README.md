@@ -8,7 +8,7 @@ Per project rules, fixtures are recorded from real store responses and are never
 ### Printers (`tests/fixtures/printers/`)
 | Fixture File | Source Endpoint / URL | Capture Date | Status |
 |---|---|---|---|
-| `collections_printers.json` | `https://eu.store.bambulab.com/collections/{printers_handle}/products.json?limit=250&page=1` | Pending | PENDING LIVE CAPTURE |
+| `collections_printers.json` | `https://eu.store.bambulab.com/en/collections/3d-printer?skr=yes` | 2026-11-02 | Captured (9 3D printers, live catalog component state) |
 | `product_printer_detail.json` | `https://eu.store.bambulab.com/products/{printer_handle}.json` | Pending | PENDING LIVE CAPTURE |
 | `product_printer_page.html` | `https://eu.store.bambulab.com/products/{printer_handle}` | Pending | PENDING LIVE CAPTURE |
 
