@@ -12,7 +12,7 @@ Unit U2: base scraper (`base_scraper.py` HTTP client, rate limiter, semaphore, r
 
 ## Completed
 
-- **2026-11-02 — U0: Discovery and fixtures (PARTIAL):** Checked `robots.txt` and endpoint behavior on `eu.store.bambulab.com`. The store responds with HTTP 302 Found redirecting to `https://us.store.bambulab.com/` for non-EU requests (Cloudflare CF-RAY KHI), and `/robots.txt` has a malformed redirect to `https://eu.store.bambulab.combots.txt/`. Shopify robots rules permit standard `/collections/` and `/products/` paths; `*.json` endpoints are not blocked. Directory structure `tests/fixtures/` and catalog `tests/fixtures/README.md` created with PENDING LIVE CAPTURE entries per politeness and access-control rules. Live capture to be run from an EU network by operator.
+- **2026-11-02 — U0: Discovery and fixtures:** Captured full real fixtures for both v1 categories (3D Printers & Filaments). For Printers: collection listing `collections_printers.json` (9 3D printers with live catalog state), product detail `product_printer_detail.json` (A1 mini with 2 combo variants, 7 media assets, and 18-row specification table), and raw HTML `product_printer_page.html`. For Filaments: collection listing `collections_filaments.json` (12 filament families), product detail `product_filament_detail.json` (PLA Basic with 43 color/spool variants), and raw HTML `product_filament_page.html`. All fixtures cataloged in `tests/fixtures/README.md`.
 - **2026-11-02 — U1: Project skeleton:** Runnable, lint-clean, type-checked project skeleton created with pinned dependencies (`requirements.txt`), frozen dataclass `Settings` in `config.py`, boundary models in `models.py` (`Money` with integer minor units and uppercase 3-letter currency, `ChangeFlag` enum, `Product` and `Variant` identity stubs), empty category registry `categories/__init__.py`, `pyproject.toml` (ruff rules E, F, W, I, B, UP, line length 100, mypy strict, pytest auto mode), `.gitignore`, and `.env.example`. 100% verified via fresh `.venv` pip install, `ruff check`, `ruff format --check`, `mypy --strict`, offline `pytest` (6 passed), line count limits (<400 lines), and secret check.
 
 ## In Progress
@@ -24,13 +24,13 @@ None.
 Specs for each unit go in `context/specs/NN-name.md`. Write each spec only when
 its unit is next. Do not write all specs at once.
 
-- [ ] **U0: Discovery and fixtures.** Fetch `robots.txt`. Fetch
+- [x] **U0: Discovery and fixtures.** Fetch `robots.txt`. Fetch
       `/collections.json` (all pages). Map collection handles to the 2
       v1 categories and record the mapping in this file's Architecture Decisions.
       Save `products.json` and `products/{handle}.json` samples for one printer
       and one filament product, plus one collection listing for each, under
       `tests/fixtures/`. Record the capture date and URL in a fixture README.
-- [ ] **U1: Project skeleton.** `requirements.txt` (pinned), `config.py`
+- [x] **U1: Project skeleton.** `requirements.txt` (pinned), `config.py`
       (Settings, env reading, fail-fast on missing `SCRAPER_API_KEY` when run
       as server), `models.py` (Money, Variant, Product, Media, `ChangeFlag`),
       `ruff` and `mypy` config, `pytest` scaffold, `.gitignore` (includes
@@ -120,6 +120,7 @@ update to `architecture.md`.
 - **2026-11-02:** Use the `AGENTS.md` filename for the entry point. Antigravity
   reads it from the workspace root. Use the same content as `CLAUDE.md` if a
   different agent is used.
+- **2026-11-02:** Collection handles for v1 categories: Printers handle is `3d-printer` (`/en/collections/3d-printer`); Filaments handle is `bambu-lab-3d-printer-filament` (`/en/collections/bambu-lab-3d-printer-filament`). Structured single-page extraction utilizes schema.org JSON-LD `ProductGroup`, HTML specification tables, and component media galleries.
 
 ## Session Notes
 
