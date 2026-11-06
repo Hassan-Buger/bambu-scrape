@@ -1,10 +1,10 @@
-"""Core data models and domain enums for catalog synchronization."""
+"""Core data models and domain schemas for catalog synchronization and APIs."""
 
 import re
 from decimal import Decimal
 from enum import Enum
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 # Canonical machine-readable error codes referenced by API surface
 ERROR_INVALID_CATEGORY = "invalid_category"
@@ -51,7 +51,7 @@ class Money(BaseModel):
 
 
 class Product(BaseModel):
-    """Product stub containing identity fields only; full schema defined in U2–U4."""
+    """Product stub containing identity fields."""
 
     model_config = ConfigDict(extra="ignore")
 
@@ -59,8 +59,98 @@ class Product(BaseModel):
 
 
 class Variant(BaseModel):
-    """Variant stub containing identity fields only; full schema defined in U2–U4."""
+    """Variant stub containing identity fields."""
 
     model_config = ConfigDict(extra="ignore")
 
     variant_id: int
+
+
+# =====================================================================
+# STANDARDIZED EU CATALOG API SCHEMAS (V1)
+# =====================================================================
+
+
+class VariantSchema(BaseModel):
+    """Normalized product variant entity."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    variant_id: str
+    sku: str
+    title: str
+    price: float
+    compare_at_price: float | None = None
+    in_stock: bool = True
+    attributes: dict[str, str] = Field(default_factory=dict)
+
+
+class ProductSchema(BaseModel):
+    """Normalized full product detail entity."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    product_id: str
+    title: str
+    slug: str
+    category: str
+    category_path: list[str] = Field(default_factory=list)
+    store_region: str = "EU"
+    currency: str = "EUR"
+    url: str
+    description: str | None = None
+    specifications: dict[str, str] = Field(default_factory=dict)
+    variants: list[VariantSchema] = Field(default_factory=list)
+    images: list[str] = Field(default_factory=list)
+    updated_at: str
+
+
+class PaginationMeta(BaseModel):
+    """Pagination metadata for collection listings."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    page: int
+    limit: int
+    total: int
+    pages: int
+
+
+class ProductListResponse(BaseModel):
+    """Standardized response envelope for product lists."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    success: bool = True
+    data: list[ProductSchema]
+    pagination: PaginationMeta
+
+
+class ProductDetailResponse(BaseModel):
+    """Standardized response envelope for single product details."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    success: bool = True
+    data: ProductSchema | None = None
+    error: str | None = None
+
+
+class CategoryItem(BaseModel):
+    """Catalog category overview item."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    category_key: str
+    title: str
+    handle: str
+    product_count: int
+
+
+class CategoryListResponse(BaseModel):
+    """Standardized response envelope for categories list."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    success: bool = True
+    data: list[CategoryItem]
